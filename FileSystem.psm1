@@ -2,6 +2,10 @@
 # Module FileSystem.psm1
 #---------------------------------------------------------------------------------
 
+#---------------------------------------------------------------------------------
+# Permission Cmdlets
+#---------------------------------------------------------------------------------
+
 Function Get-ItemPermissions {
     
 <#
@@ -307,3 +311,85 @@ Function Set-ItemInheritance  {
         }
     }
 }
+
+#---------------------------------------------------------------------------------
+# Gui Browsing from powershell
+#
+# Allows GUI browsing to select a file or folder
+#--------------------------------------------------------------------------------------
+
+# ----- https://msdn.microsoft.com/en-us/library/system.windows.forms.folderbrowserdialog(v=vs.110).aspx
+# ----- http://www.powershellmagazine.com/2013/06/28/pstip-using-the-system-windows-forms-folderbrowserdialog-class/
+
+#---------------------------------------------------------------------------------
+
+Function Get-FileorFolderPath {
+
+<#
+    .Synopsis
+        Opens a GUI window to allow browsing to a folder or file.
+
+    .Description
+        Allows interactive browsing of the file / folder paths and selecting the file or folder.
+
+    .Parameter InitialDirectory
+        Starting path to begin browsing
+
+    .Link
+        http://www.codeproject.com/Articles/44914/Select-file-or-folder-from-the-same-dialog
+
+    ,Link
+        http://www.vbforums.com/showthread.php?655771-Select-file-or-folder-using-openFileDialog&p=4043067#post4043067
+#>
+
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$True,ValueFromPipeline=$true)]
+        [String]$InitialDirectory
+    )
+ 
+     [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
+
+     $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+     
+     $OpenFileDialog.initialDirectory = $initialDirectory
+     $OpenFileDialog.ValidateNames = $False
+     $OpenFileDialog.CheckFileExists = $False
+     $OpenFileDialog.FileName = "Folder Selection"
+
+     $OpenFileDialog.filter = "All files (*.*)| *.*"
+     $OpenFileDialog.ShowDialog() | Out-Null
+     write-output ($OpenFileDialog.filename).TrimEnd("Folder Selection")
+} #end function Get-FileName
+
+#--------------------------------------------------------------------------------------
+
+Function Get-Folder {
+    
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$True,ValueFromPipeline=$true)]
+        [String]$StartPath
+        
+    )
+
+    $FolderBrowserDialog = New-Object System.WIndows.Forms.FolderBrowserDialog 
+    
+    $FolderBrowserDialog.SelectedPath = $StartPath
+
+
+
+    $FolderBrowserDialog.ShowDialog() | out-Null
+    $FolderBrowserDialog.SelectedPath
+}
+
+
+#---------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
