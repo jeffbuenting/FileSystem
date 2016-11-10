@@ -359,7 +359,7 @@ Function Get-FileorFolderPath {
 
      $OpenFileDialog.filter = "All files (*.*)| *.*"
      $OpenFileDialog.ShowDialog() | Out-Null
-     write-output ($OpenFileDialog.filename).TrimEnd("Folder Selection")
+     write-output ($OpenFileDialog.filename).Replace("Folder Selection",'')
 } #end function Get-FileName
 
 #--------------------------------------------------------------------------------------
