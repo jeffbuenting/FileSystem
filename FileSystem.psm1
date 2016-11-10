@@ -359,7 +359,9 @@ Function Get-FileorFolderPath {
 
      $OpenFileDialog.filter = "All files (*.*)| *.*"
      $OpenFileDialog.ShowDialog() | Out-Null
-     write-output ($OpenFileDialog.filename).Replace("Folder Selection",'')
+
+     # ----- Return nothing if FileName is only 'Folder Selection'
+     if ( $OpenFileDialog.FileName -ne 'Folder Selection' ) { write-output ( Get-Item ($OpenFileDialog.filename).Replace("Folder Selection",'') ) }
 } #end function Get-FileName
 
 #--------------------------------------------------------------------------------------
