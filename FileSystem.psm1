@@ -87,18 +87,27 @@ Function Grant-ItemPermissions {
 
     Begin {
         Write-Verbose "Creating new access Rule(s)"
-        $Rule = new-object System.Security.AccessControl.FileSystemAccessRule($AccountName,$Right,"ContainerInherit, ObjectInherit","None","Allow")
-        
+        #$Rule = new-object System.Security.AccessControl.FileSystemAccessRule($AccountName,$Right,"ContainerInherit,ObjectInherit","None","Allow")
+        $Rule = new-object System.Security.AccessControl.FileSystemAccessRule($AccountName,$Right,"Allow")
     }
 
     Process {
         Foreach ( $I in $Item ) {
             Write-Verbose "Grant-ItemPermission : Granting Permissions for $I"
-            $ACL = $I | Get-ACL
+            Write-Verbose "Item = $($I | Out-String)"
+            Try {
+                $ACL = $I | Get-ACL -ErrorAction Stop
+                Write-Debug "ACL = $($ACL | Out-String)"
       
-            $ACL.SetAccessRule($RUle)
+                $ACL.SetAccessRule($RUle)
           
-            $I | Set-ACL -aclObject $ACL
+                $I | Set-ACL -aclObject $ACL -ErrorAction Stop
+            }
+            Catch {
+                $EXceptionMessage = $_.Exception.Message
+                $ExceptionType = $_.exception.GetType().fullname
+                Throw "Grant-ItemPermissions : Error setting permissions.`n`n     $ExceptionMessage`n`n     Exception : $ExceptionType"
+            }
         }
     }
 }
