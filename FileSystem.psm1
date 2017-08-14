@@ -6,7 +6,7 @@
 # Permission Cmdlets
 #---------------------------------------------------------------------------------
 
-Function Get-ItemPermissions {
+Function Get-ItemPermission {
     
 <#
     .Synopsis
@@ -21,12 +21,12 @@ Function Get-ItemPermissions {
     .Example
         get permissions for c:\temp
 
-        Get-item c:\temp | Get-ItemAccess 
+        Get-item c:\temp | Get-ItemPermission 
 
     .Link
         http://blogs.technet.com/b/josebda/archive/2010/11/12/how-to-handle-ntfs-folder-permissions-security-descriptors-and-acls-in-powershell.aspx
 
-    .Note
+    .Notes
         Author: Jeff Buenting
         Date: 2015 DEC 1
 #>
@@ -47,7 +47,7 @@ Function Get-ItemPermissions {
 
 #---------------------------------------------------------------------------------
 
-Function Grant-ItemPermissions {
+Function Grant-ItemPermission {
 
 <#
     .Synopsis
